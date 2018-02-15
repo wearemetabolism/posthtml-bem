@@ -7,8 +7,8 @@ function test(input, output, done) {
     posthtml()
         .use(bem({
             elemPrefix: '__',
-            modPrefix: '_',
-            modDlmtr: '_'
+            modPrefix: '--',
+            modDlmtr: '-'
         }))
         .process(input)
         .then(function(result) {
@@ -28,34 +28,50 @@ describe('Test for block', function() {
         );
     });
 
+    it('Test block in block', function(done) {
+        test(
+            '<div block="animals"><div block="animal">Animal</div></div>',
+            '<div class="animals"><div class="animal">Animal</div></div>',
+            done
+        );
+    });
+
     it('Test boolean mod for block', function(done) {
         test(
-            '<div block="animal" mods="moo">Cow</div>',
-            '<div class="animal animal_moo">Cow</div>',
+            '<div block="animal" mod="moo">Cow</div>',
+            '<div class="animal animal--moo">Cow</div>',
+            done
+        );
+    });
+
+    it('Test boolean mod for block in block', function(done) {
+        test(
+            '<div block="animals"><div block="animal" mod="moo">Cow</div></div>',
+            '<div class="animals"><div class="animal animal--moo">Cow</div></div>',
             done
         );
     });
 
     it('Test key_value mod for block', function(done) {
         test(
-            '<div block="animal" mods="size:big">Cow</div>',
-            '<div class="animal animal_size_big">Cow</div>',
+            '<div block="animal" mod="size:big">Cow</div>',
+            '<div class="animal animal--size-big">Cow</div>',
             done
         );
     });
 
-    it('Test key_value + boolean mods for block', function(done) {
+    it('Test key_value + boolean mod for block', function(done) {
         test(
-            '<div block="animal" mods="size:big moo">Cow</div>',
-            '<div class="animal animal_size_big animal_moo">Cow</div>',
+            '<div block="animal" mod="size:big moo">Cow</div>',
+            '<div class="animal animal--size-big animal--moo">Cow</div>',
             done
         );
     });
 
-    it('Test key_value mods for block', function(done) {
+    it('Test key_value mod for block', function(done) {
         test(
-            '<div block="animal" mods="size:big horns:two">Cow</div>',
-            '<div class="animal animal_size_big animal_horns_two">Cow</div>',
+            '<div block="animal" mod="size:big horns:two">Cow</div>',
+            '<div class="animal animal--size-big animal--horns-two">Cow</div>',
             done
         );
     });
@@ -65,15 +81,47 @@ describe('Test for block', function() {
 describe('Test for element', function() {
     it('Test elem', function(done) {
         test(
-            '<div block="animal"><div elem="cow">Cow</div></div>',
+            '<div block="animal"><div element="cow">Cow</div></div>',
             '<div class="animal"><div class="animal__cow">Cow</div></div>',
+            done
+        );
+    });
+
+    it('Test elem in imbricated block 1', function(done) {
+        test(
+            '<div block="animal"><div element="cow"><div block="mouth"><div element="teeth">Teeth</div></div></div></div>',
+            '<div class="animal"><div class="animal__cow"><div class="mouth"><div class="mouth__teeth">Teeth</div></div></div></div>',
+            done
+        );
+    });
+
+    it('Test elem in imbricated block 2', function(done) {
+        test(
+            '<div block="animal"><div element="cow">Cow</div><div block="bell"><div element="item">item</div></div></div>',
+            '<div class="animal"><div class="animal__cow">Cow</div><div class="bell"><div class="bell__item">item</div></div></div>',
+            done
+        );
+    });
+
+    it('Test indirect element', function(done) {
+        test(
+            '<div block="animal"><div class="group"><div element="cow">Cow</div></div></div>',
+            '<div class="animal"><div class="group"><div class="animal__cow">Cow</div></div></div>',
+            done
+        );
+    });
+
+    it('Test indirect element 2', function(done) {
+        test(
+            '<div block="animal"><div class="group"><div class="subgroup"><div element="cow">Cow</div></div></div></div>',
+            '<div class="animal"><div class="group"><div class="subgroup"><div class="animal__cow">Cow</div></div></div></div>',
             done
         );
     });
 
     it('Test nested element', function(done) {
         test(
-            '<div block="animal"><div elem="cow"><div elem="calf"></div></div></div>',
+            '<div block="animal"><div element="cow"><div element="calf"></div></div></div>',
             '<div class="animal"><div class="animal__cow"><div class="animal__calf"></div></div></div>',
             done
         );
@@ -81,95 +129,32 @@ describe('Test for element', function() {
 
     it('Test boolean mod for element', function(done) {
         test(
-            '<div block="animal"><div elem="cow" mods="moo">Cow</div></div>',
-            '<div class="animal"><div class="animal__cow animal__cow_moo">Cow</div></div>',
+            '<div block="animal"><div element="cow" mod="moo">Cow</div></div>',
+            '<div class="animal"><div class="animal__cow animal__cow--moo">Cow</div></div>',
             done
         );
     });
 
     it('Test key_value mod for element', function(done) {
         test(
-            '<div block="animal"><div elem="cow" mods="size:big">Cow</div></div>',
-            '<div class="animal"><div class="animal__cow animal__cow_size_big">Cow</div></div>',
+            '<div block="animal"><div element="cow" mod="size:big">Cow</div></div>',
+            '<div class="animal"><div class="animal__cow animal__cow--size-big">Cow</div></div>',
             done
         );
     });
 
-    it('Test key_value + boolean mods for element', function(done) {
+    it('Test key_value + boolean mod for element', function(done) {
         test(
-            '<div block="animal"><div elem="cow" mods="size:big moo">Cow</div></div>',
-            '<div class="animal"><div class="animal__cow animal__cow_size_big animal__cow_moo">Cow</div></div>',
+            '<div block="animal"><div element="cow" mod="size:big moo">Cow</div></div>',
+            '<div class="animal"><div class="animal__cow animal__cow--size-big animal__cow--moo">Cow</div></div>',
             done
         );
     });
 
-    it('Test key_value mods for element', function(done) {
+    it('Test key_value mod for element', function(done) {
         test(
-            '<div block="animal"><div elem="cow" mods="size:big horns:two">Cow</div></div>',
-            '<div class="animal"><div class="animal__cow animal__cow_size_big animal__cow_horns_two">Cow</div></div>',
-            done
-        );
-    });
-});
-
-describe('Test for mixes', function() {
-    it('Test mixes (block) on block', function(done) {
-        test(
-            '<div block="animal" mix="block:elephant"><div elem="nose" mods="size:long">Nose</div></div>',
-            '<div class="animal elephant"><div class="animal__nose animal__nose_size_long">Nose</div></div>',
-            done
-        );
-    });
-
-    it('Test mixes (elem + mods) on block', function(done) {
-        test(
-            '<div block="animal" mix="block:elephant elem:trunk mods:[size:short]"><div elem="nose" mods="size:long">Nose</div></div>',
-            '<div class="animal elephant__trunk elephant__trunk_size_short"><div class="animal__nose animal__nose_size_long">Nose</div></div>',
-            done
-        );
-    });
-
-    it('Test mixes (elem + multiple mods) on block', function(done) {
-        test(
-            '<div block="animal" mix="block:elephant elem:trunk mods:[size:short color:brown]"><div elem="nose" mods="size:long">Nose</div></div>',
-            '<div class="animal elephant__trunk elephant__trunk_size_short elephant__trunk_color_brown"><div class="animal__nose animal__nose_size_long">Nose</div></div>',
-            done
-        );
-    });
-
-    it('Test mixes (elem + multiple mods) on element', function(done) {
-        test(
-            '<div block="animal"><div elem="nose" mods="size:long" mix="block:elephant elem:trunk mods:[size:short color:brown]">Nose</div></div>',
-            '<div class="animal"><div class="animal__nose animal__nose_size_long elephant__trunk elephant__trunk_size_short elephant__trunk_color_brown">Nose</div></div>',
-            done
-        );
-    });
-
-    it('Test multiple mix on block', function(done) {
-        test(
-            '<div block="animal" mix="block:elephant elem:trunk mods:[size:short color:brown], block:cow mods:[moow]"><div elem="nose" mods="size:long">Nose</div></div>',
-            '<div class="animal elephant__trunk elephant__trunk_size_short elephant__trunk_color_brown cow cow_moow"><div class="animal__nose animal__nose_size_long">Nose</div></div>',
-            done
-        );
-    });
-
-});
-
-describe('Services test', function() {
-    it('Test for trimming whitespaces', function(done) {
-        test(
-            '<div block="animal" mix="block: elephant"><div elem="nose" mods="size:  long">Nose</div></div>',
-            '<div class="animal elephant"><div class="animal__nose animal__nose_size_long">Nose</div></div>',
-            done
-        );
-    });
-});
-
-describe('Classes test', function() {
-    it('Extend classes', function(done) {
-        test(
-            '<div block="animal" mix="block: elephant" class="clearfix grid"><div elem="nose" mods="size:  long" class="clearfix grid">Nose</div></div>',
-            '<div class="animal elephant clearfix grid"><div class="animal__nose animal__nose_size_long clearfix grid">Nose</div></div>',
+            '<div block="animal"><div element="cow" mod="size:big horns:two">Cow</div></div>',
+            '<div class="animal"><div class="animal__cow animal__cow--size-big animal__cow--horns-two">Cow</div></div>',
             done
         );
     });

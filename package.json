@@ -1,6 +1,6 @@
 {
   "name": "posthtml-bem",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "PostHTML-plugin for creating BEM-named class structure",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rajdee/posthtml-bem.git"
+    "url": "git+https://github.com/wearemetabolism/posthtml-bem.git"
   },
   "keywords": [
     "bem",
@@ -18,19 +18,16 @@
     "beml"
   ],
   "author": {
-    "name": "Ruslan Abdullaev"
+    "name": "Metabolism"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rajdee/posthtml-bem/issues"
+    "url": "https://github.com/wearemetabolism/posthtml-bem/issues"
   },
-  "homepage": "https://github.com/rajdee/posthtml-bem#readme",
+  "homepage": "https://github.com/wearemetabolism/posthtml-bem#readme",
   "devDependencies": {
     "chai": "^3.3.0",
     "mocha": "^2.3.3",
     "posthtml": "^0.4.1"
-  },
-  "dependencies": {
-    "gulp-util": "^3.0.6"
   }
 }

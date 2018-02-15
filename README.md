@@ -1,6 +1,5 @@
 # PostHTML-bem
-[![npm version](https://badge.fury.io/js/posthtml-bem.svg)](http://badge.fury.io/js/posthtml-bem)
-[![Build Status](https://travis-ci.org/rajdee/posthtml-bem.svg?branch=master)](https://travis-ci.org/rajdee/posthtml-bem?branch=master)
+[![Build Status](https://travis-ci.org/wearemetabolism/posthtml-bem.svg?branch=master)](https://travis-ci.org/wearemetabolism/posthtml-bem.svg?branch=master)
 
 [PostHTML](https://github.com/posthtml/posthtml) plugin for support to simplify the maintenance of [BEM](http://bem.info) naming structure in html
 
@@ -35,7 +34,7 @@ This would render like
 
 ```html
 <div block="MadTeaParty">
-    <div elem="march-hare">March Hare</div>
+    <div element="march_hare">March Hare</div>
 </div>
 ```
 
@@ -43,7 +42,7 @@ This would render like
 
 ```html
 <div class="MadTeaParty">
-    <div class="MadTeaParty__march-hare">March Hare</div>
+    <div class="MadTeaParty__march_hare">March Hare</div>
 </div>
 ```
 
@@ -53,8 +52,8 @@ _**Attention:** Please use "mods" for the attribute modifiers instead of "mod" a
 
 ```html
 <div block="MadTeaParty">
-    <div elem="march-hare" mods="type:mad">March Hare</div>
-    <div elem="march-hare" mods="mad">March Hare</div>
+    <div element="march_hare" mod="type:mad">March Hare</div>
+    <div element="march_hare" mod="mad">March Hare</div>
 </div>
 ```
 
@@ -63,46 +62,12 @@ This would render like
 
 ```html
 <div class="MadTeaParty">
-    <div class="MadTeaParty__march-hare MadTeaParty__march-hare_type_mad">
+    <div class="MadTeaParty__march_hare MadTeaParty__march_hare--type-mad">
         March Hare
     </div>
-    <div class="MadTeaParty__march-hare MadTeaParty__march-hare_mad">
+    <div class="MadTeaParty__march_hare MadTeaParty__march_hare--mad">
         March Hare
     </div>
-</div>
-```
-
-### Mixes
-
-You can mix block, element or modifiers.
-
-```html
-<div block="animal" mix="block:elephant elem:trunk mods:[size:short broken]">
-    <div elem="nose" mods="size:long">Nose</div>
-</div>
-```
-
-This would render like
-
-```html
-<div class="animal elephant__trunk elephant__trunk_size_short elephant__trunk_broken">
-    <div class="animal__nose animal__nose_size_long">Nose</div>
-</div>
-```
-
-You can use several mixes separated by a comma.
-
-```html
-<div block="animal" mix="block:elephant elem:trunk mods:[size:short broken], block:cow mods:[moo]">
-    <div elem="nose" mods="size:long">Nose</div>
-</div>
-```
-
-This would render like
-
-```html
-<div class="animal elephant__trunk elephant__trunk_size_short elephant__trunk_broken cow cow_moo">
-    <div class="animal__nose animal__nose_size_long">Nose</div>
 </div>
 ```
 
@@ -111,16 +76,16 @@ This would render like
 Native classes are supplemented by BEM classes
 
 ```html
-<div block="animal" mix="block: elephant" class="clearfix grid">
-    <div elem="nose" mods="size:  long" class="clearfix grid">Nose</div>
+<div block="animal" class="clearfix grid">
+    <div element="nose" mod="size:long" class="clearfix grid">Nose</div>
 </div>
 ```
 
 This would render like
 
 ```html
-<div class="animal elephant clearfix grid">
-    <div class="animal__nose animal__nose_size_long clearfix grid">Nose</div>
+<div class="animal clearfix grid">
+    <div class="animal__nose animal__nose--size-long clearfix grid">Nose</div>
 </div>
 ```
 
@@ -132,10 +97,10 @@ This would render like
 var posthtml = require('posthtml'),
     config = {
         elemPrefix: '__',
-        modPrefix: '_',
-        modDlmtr: '--'
+        modPrefix: '--',
+        modDlmtr: '-'
     },
-    html = '<div block="mad-tea-party"><div elem="march-hare" mods="type:mad">March Hare</div><div elem="hatter" mods="type:mad">Hatter</div><div elem="dormouse" mods="state:sleepy">Dormouse</div></div>';
+    html = '<div block="mad-tea-party"><div element="march_hare" mod="type:mad">March Hare</div><div element="hatter" mod="type:mad">Hatter</div><div element="dormouse" mod="state:sleepy">Dormouse</div></div>';
 
 posthtml()
     .use(require('posthtml-bem')(config))
@@ -143,6 +108,41 @@ posthtml()
     .then(function (result) {
         console.log(result.html);
     });
+```
+
+## With Webpack
+
+```javascript
+
+let config = {
+    ...
+    module: {
+        rules: [
+            {
+                test: /\.html/,
+                use: [
+                    {
+                        loader: 'html-loader',
+                        options: {
+                            minimize: false
+                        }
+                    },
+                    {
+                        loader: 'posthtml-loader',
+                        options: {
+                            ident: 'posthtml',
+                            plugins: [
+                                require('posthtml-bem')()
+                            ]
+                        }
+                    }
+                ]
+            }
+            ...
+};
+
+module.exports = config;
+
 ```
 
 ## With Gulp
@@ -157,8 +157,8 @@ gulp.task('default', function () {
         .pipe(posthtml([
             require('posthtml-bem')({
                 elemPrefix: '__',
-                modPrefix: '_',
-                modDlmtr: '--'
+                modPrefix: '--',
+                modDlmtr: '-'
             })
         ]))
     .pipe(rename('after.html'))
@@ -171,38 +171,13 @@ gulp.task('default', function () {
 jade template
 ```html
 div(block='animals')
-    div(elem='rabbit' mods='type:scurrying color:white')
-    div(elem='dormouse' mods='type:sleeper color:red')
+    div(element='rabbit' mod='type:scurrying color:white')
+    div(element='dormouse' mod='type:sleeper color:red')
 ```
-
-guplfile.js
-```javascript
-var gulp = require('gulp'),
-    jade = require('gulp-jade'),
-    rename = require('gulp-rename'),
-    posthtml = require('gulp-posthtml');
-    
-gulp.task('default', function () {
-    return gulp.src('before.jade')
-        .pipe(jade({
-            pretty: true
-        }))
-        .pipe(posthtml([
-            require('posthtml-bem')({
-                elemPrefix: '__',
-                modPrefix: '_',
-                modDlmtr: '--'
-            })
-        ]))
-        .pipe(rename('after.html'))
-        .pipe(gulp.dest('.'));
-});
-```
-
 ## Predecessors
 
 This plugin was inspired by the syntax and the idea of using custom attributes from [BEML](https://github.com/zenwalker/node-beml) and [bemto](https://github.com/kizu/bemto).
-
+This is a fork of [rajdee/posthtml-bem](https://github.com/rajdee/posthtml-bem)
 
 ## License
 
