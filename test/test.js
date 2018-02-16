@@ -15,8 +15,8 @@ function test(input, output, done) {
             expect(output).to.eql(result.html);
             done();
         }).catch(function(error) {
-            done(error);
-        });
+        done(error);
+    });
 }
 
 describe('Test for block', function() {
@@ -75,7 +75,6 @@ describe('Test for block', function() {
             done
         );
     });
-
 });
 
 describe('Test for element', function() {
@@ -158,4 +157,55 @@ describe('Test for element', function() {
             done
         );
     });
+});
+
+describe('Test for TWIG support', function() {
+
+	it('Test support for block', function(done) {
+		test(
+			'<div block="{{ animal }}"><div element="cow">Cow</div></div>',
+			'<div class="{{ animal }}"><div class="{{ animal }}__cow">Cow</div></div>',
+			done
+		);
+	});
+
+	it('Test support for element', function(done) {
+		test(
+			'<div block="animal"><div element="{{ cow }}">Cow</div></div>',
+			'<div class="animal"><div class="animal__{{ cow }}">Cow</div></div>',
+			done
+		);
+	});
+
+	it('Test support for mod in block', function(done) {
+		test(
+			'<div block="animal" mod="{{ moo }}"><div element="cow">Cow</div></div>',
+			'<div class="animal animal--{{ moo }}"><div class="animal__cow">Cow</div></div>',
+			done
+		);
+	});
+
+	it('Test support for mod in element', function(done) {
+		test(
+			'<div block="animal"><div element="cow" mod="{{ color }}">Cow</div></div>',
+			'<div class="animal"><div class="animal__cow animal__cow--{{ color }}">Cow</div></div>',
+			done
+		);
+	});
+
+	it('Test support for multiple mod in element', function(done) {
+		test(
+			'<div block="animal"><div element="cow" mod="big {{ color }}">Cow</div></div>',
+			'<div class="animal"><div class="animal__cow animal__cow--big animal__cow--{{ color }}">Cow</div></div>',
+			done
+		);
+	});
+
+	it('Test support for multiple mod in block', function(done) {
+		test(
+			'<div block="animal" mod="big {{ type }}"><div element="cow">Cow</div></div>',
+			'<div class="animal animal--big animal--{{ type }}"><div class="animal__cow">Cow</div></div>',
+			done
+		);
+	});
 });

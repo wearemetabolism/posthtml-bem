@@ -26,11 +26,17 @@ module.exports = function (config) {
     _createModClass = function (baseClass, mod) {
         var className = '',
             modClass;
+
+	    //escape space in twig variable
+        mod = mod.replace(/\s+(?=[^\{\}]*\})/g, '@@');
+
         mod
             .replace(/\s{2,}/g, ' ') // remove more than one whitespace
             .replace(/\:\s?/g, config.modDlmtr) // remove whitespace after the semicolon
             .split(' ')
             .forEach(function (mod) {
+	            //un-escape space
+            	mod = mod.replace(/@@/g, ' ');
                 modClass = baseClass + config.modPrefix + mod;
                 className += ' ' + modClass;
             });
