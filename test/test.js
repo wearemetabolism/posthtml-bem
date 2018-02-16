@@ -7,8 +7,7 @@ function test(input, output, done) {
     posthtml()
         .use(bem({
             elemPrefix: '__',
-            modPrefix: '--',
-            modDlmtr: '-'
+            modPrefix: '--'
         }))
         .process(input)
         .then(function(result) {
@@ -48,30 +47,6 @@ describe('Test for block', function() {
         test(
             '<div block="animals"><div block="animal" mod="moo">Cow</div></div>',
             '<div class="animals"><div class="animal animal--moo">Cow</div></div>',
-            done
-        );
-    });
-
-    it('Test key_value mod for block', function(done) {
-        test(
-            '<div block="animal" mod="size:big">Cow</div>',
-            '<div class="animal animal--size-big">Cow</div>',
-            done
-        );
-    });
-
-    it('Test key_value + boolean mod for block', function(done) {
-        test(
-            '<div block="animal" mod="size:big moo">Cow</div>',
-            '<div class="animal animal--size-big animal--moo">Cow</div>',
-            done
-        );
-    });
-
-    it('Test key_value mod for block', function(done) {
-        test(
-            '<div block="animal" mod="size:big horns:two">Cow</div>',
-            '<div class="animal animal--size-big animal--horns-two">Cow</div>',
             done
         );
     });
@@ -133,30 +108,6 @@ describe('Test for element', function() {
             done
         );
     });
-
-    it('Test key_value mod for element', function(done) {
-        test(
-            '<div block="animal"><div element="cow" mod="size:big">Cow</div></div>',
-            '<div class="animal"><div class="animal__cow animal__cow--size-big">Cow</div></div>',
-            done
-        );
-    });
-
-    it('Test key_value + boolean mod for element', function(done) {
-        test(
-            '<div block="animal"><div element="cow" mod="size:big moo">Cow</div></div>',
-            '<div class="animal"><div class="animal__cow animal__cow--size-big animal__cow--moo">Cow</div></div>',
-            done
-        );
-    });
-
-    it('Test key_value mod for element', function(done) {
-        test(
-            '<div block="animal"><div element="cow" mod="size:big horns:two">Cow</div></div>',
-            '<div class="animal"><div class="animal__cow animal__cow--size-big animal__cow--horns-two">Cow</div></div>',
-            done
-        );
-    });
 });
 
 describe('Test for TWIG support', function() {
@@ -205,6 +156,14 @@ describe('Test for TWIG support', function() {
 		test(
 			'<div block="animal" mod="big {{ type }}"><div element="cow">Cow</div></div>',
 			'<div class="animal animal--big animal--{{ type }}"><div class="animal__cow">Cow</div></div>',
+			done
+		);
+	});
+
+	it('Test support for complex structure', function(done) {
+		test(
+			'{% if input.type == "hidden" %}<div block="Input" mod="{{ input.display|default() ? inline : block }}" class="{{ input.class|default() }}"></div>{% endif %}',
+			'{% if input.type == "hidden" %}<div class="Input Input--{{ input.display|default() ? inline : block }} {{ input.class|default() }}"></div>{% endif %}',
 			done
 		);
 	});

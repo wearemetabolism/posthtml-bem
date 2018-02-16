@@ -52,7 +52,6 @@ _**Attention:** Please use "mods" for the attribute modifiers instead of "mod" a
 
 ```html
 <div block="MadTeaParty">
-    <div element="march_hare" mod="type:mad">March Hare</div>
     <div element="march_hare" mod="mad">March Hare</div>
 </div>
 ```
@@ -62,9 +61,6 @@ This would render like
 
 ```html
 <div class="MadTeaParty">
-    <div class="MadTeaParty__march_hare MadTeaParty__march_hare--type-mad">
-        March Hare
-    </div>
     <div class="MadTeaParty__march_hare MadTeaParty__march_hare--mad">
         March Hare
     </div>
@@ -77,7 +73,7 @@ Native classes are supplemented by BEM classes
 
 ```html
 <div block="animal" class="clearfix grid">
-    <div element="nose" mod="size:long" class="clearfix grid">Nose</div>
+    <div element="nose" mod="long" class="clearfix grid">Nose</div>
 </div>
 ```
 
@@ -85,7 +81,7 @@ This would render like
 
 ```html
 <div class="animal clearfix grid">
-    <div class="animal__nose animal__nose--size-long clearfix grid">Nose</div>
+    <div class="animal__nose animal__nose--long clearfix grid">Nose</div>
 </div>
 ```
 
@@ -97,10 +93,9 @@ This would render like
 var posthtml = require('posthtml'),
     config = {
         elemPrefix: '__',
-        modPrefix: '--',
-        modDlmtr: '-'
+        modPrefix: '--'
     },
-    html = '<div block="mad-tea-party"><div element="march_hare" mod="type:mad">March Hare</div><div element="hatter" mod="type:mad">Hatter</div><div element="dormouse" mod="state:sleepy">Dormouse</div></div>';
+    html = '<div block="mad-tea-party"><div element="march_hare" mod="mad">March Hare</div><div element="hatter" mod="type:mad">Hatter</div><div element="dormouse" mod="sleepy">Dormouse</div></div>';
 
 posthtml()
     .use(require('posthtml-bem')(config))
@@ -157,8 +152,7 @@ gulp.task('default', function () {
         .pipe(posthtml([
             require('posthtml-bem')({
                 elemPrefix: '__',
-                modPrefix: '--',
-                modDlmtr: '-'
+                modPrefix: '--'
             })
         ]))
     .pipe(rename('after.html'))
@@ -171,8 +165,8 @@ gulp.task('default', function () {
 jade template
 ```html
 div(block='animals')
-    div(element='rabbit' mod='type:scurrying color:white')
-    div(element='dormouse' mod='type:sleeper color:red')
+    div(element='rabbit' mod='scurrying white')
+    div(element='dormouse' mod='sleeper red')
 ```
 ## Predecessors
 

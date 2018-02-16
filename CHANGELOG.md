@@ -1,3 +1,9 @@
+<a name"0.3.2"></a>
+### 0.3.2 (2018-02-16)
+
+* **parser:***
+  * remove key:value in mod to enhance TWIG compatibility
+  
 <a name"0.3.1"></a>
 ### 0.3.1 (2018-02-16)
 

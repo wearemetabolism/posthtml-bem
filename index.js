@@ -11,8 +11,7 @@ module.exports = function (config) {
     config = config ||
         {
             elemPrefix: '__',
-            modPrefix: '--',
-            modDlmtr: '-'
+            modPrefix: '--'
         };
 
     _createBlockClass = function (block) {
@@ -27,15 +26,10 @@ module.exports = function (config) {
         var className = '',
             modClass;
 
-	    //escape space in twig variable
-        mod = mod.replace(/\s+(?=[^\{\}]*\})/g, '@@');
-
-        mod
+        mod.replace(/\s+(?=[^\{\}]*\})/g, '@@')
             .replace(/\s{2,}/g, ' ') // remove more than one whitespace
-            .replace(/\:\s?/g, config.modDlmtr) // remove whitespace after the semicolon
             .split(' ')
             .forEach(function (mod) {
-	            //un-escape space
             	mod = mod.replace(/@@/g, ' ');
                 modClass = baseClass + config.modPrefix + mod;
                 className += ' ' + modClass;
